@@ -2,6 +2,7 @@
 import unittest
 import monsters
 import simfile
+import optimizer
 
 class MonsterTest(unittest.TestCase):
     def test_hard_win(self):
@@ -72,6 +73,13 @@ class SimfileTest(unittest.TestCase):
         army1, army2 = simfile.get_army('test1.sim')
         result, report = army1.attack(army2)
         self.assertFalse(result);
+
+class OptimizerTest(unittest.TestCase):
+    def test_optimize(self):
+        army1, army2 = simfile.get_army('test3.sim')
+        best = optimizer.optimize(army1, army2, show_pbar=False)
+        self.assertEqual(best[0].stack, 119)
+        self.assertEqual(best[1].stack, 5)
 
 if __name__ == '__main__':
     unittest.main()

@@ -1,0 +1,3 @@
+Vampire(16)         -> Angel(1)
+SkeletonArcher(240) -> Marksman(21)
+                    -> ImperialGriffin(6)

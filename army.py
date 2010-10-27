@@ -2,7 +2,11 @@ from report import Report
 
 class Army(list):
     def __repr__(self):
-        return "<Army %r>" % self.monsters
+        return "<Army %s>" % list.__repr__(self)
+
+    @property
+    def power(self):
+        return sum([m.power * m.stack for m in self])
 
     def pop_stack(self):
         try:
