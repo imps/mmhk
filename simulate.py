@@ -6,9 +6,9 @@ def simulate(path):
     we, them = simfile.get_army(path)
     result, report = we.attack(them)
     if result:
-        print "Victory! Report:\n%r" % report
+        print "Victory! Report: %r" % report
     else:
-        print "Defeat! Report:\n%r" % report
+        print "Defeat! Report: %r" % report
 
 def main():
     p = OptionParser(usage="%prog simfile")

@@ -37,7 +37,7 @@ class Report(list):
         self.current_round = None
 
     def __repr__(self):
-        return "\n".join([repr(item) for item in self])
+        return "\n"+"\n".join([repr(item) for item in self])
 
     def start_round(self, attacker, defender):
         self.current_round = Round(attacker, defender)
