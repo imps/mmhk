@@ -14,6 +14,10 @@ class Army(list):
         except IndexError:
             return None
 
+    def apply_power_mod(self, modifier):
+        for monster in self:
+            monster.powermod = modifier
+
     def attack(self, army, report=True):
         if report:
             rep = Report()

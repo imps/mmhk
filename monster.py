@@ -15,13 +15,14 @@ WEAPON_BONUS = 1.5
 class Monster(object):
     def __init__(self, stack=0):
         self.stack = stack
+        self.powermod = 1.0
 
     def __repr__(self):
         return "<Monster %r (%d)>" % (self.name, self.stack)
 
     @property
     def power(self):
-        return self.base_power
+        return self.base_power * self.powermod
 
     def get_bonus_power(self, monster):
         """
