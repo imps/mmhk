@@ -1,0 +1,6 @@
+Vampire(16)        -> HornedDemon(70)
+Ghost(9)           -> ArchDevil(1)
+SkeletonArcher(40) -> SuccubusMistress(5)
+Zombie(10)
+Skeleton(13)
+VampireLord(5)
