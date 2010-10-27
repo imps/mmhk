@@ -68,6 +68,9 @@ class Optimizer(object):
             result = self.brute_units(variation, n+1, len(stack_variations))
             unit_variations.append((result, variation))
 
+        if len(unit_variations) == 0:
+            return None
+
         best = min(unit_variations, key=lambda x: x[0])
         best_var = best[0][1]
         best_basevar = best[1]
