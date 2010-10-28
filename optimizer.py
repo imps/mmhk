@@ -1,5 +1,6 @@
 import itertools
-import copy
+
+from copy import deepcopy
 
 import progressbar
 
@@ -7,15 +8,20 @@ import army
 
 class Optimizer(object):
     def __init__(self, attacker, defender, show_pbar=False):
-        self.attacker = copy.deepcopy(attacker)
-        self.defender = copy.deepcopy(defender)
+        self.attacker = attacker
+        self.defender = defender
         self.show_pbar = show_pbar
 
     def get_attack_power(self, variation):
-        attacker = army.Army(copy.deepcopy(variation))
+        attacker = army.Army(variation)
         power = attacker.power
-        defender = copy.deepcopy(self.defender)
-        result, report = attacker.attack(defender, report=False)
+
+        result, report = attacker.attack(
+            self.defender,
+            report=False,
+            dry_run=True
+        )
+
         if not result:
             return 0
         return power
@@ -33,7 +39,7 @@ class Optimizer(object):
                        progressbar.Bar(left='[', right=']'),
                        ' ', progressbar.ETA()]
 
-        current = copy.deepcopy(variation)
+        current = deepcopy(variation)
         numbers = tuple(range(monster.stack, -1, -1) for monster in variation)
 
         if self.show_pbar:
