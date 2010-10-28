@@ -1,5 +1,11 @@
 from report import Report
 
+def advance_iter(iterator):
+    try:
+        return iterator.next()
+    except StopIteration:
+        return None
+
 class Army(list):
     def __repr__(self):
         return "<Army %s>" % list.__repr__(self)
@@ -8,15 +14,15 @@ class Army(list):
     def power(self):
         return sum([m.power * m.stack for m in self])
 
-    def pop_stack(self):
-        try:
-            return self.pop(0)
-        except IndexError:
-            return None
-
     def apply_power_mod(self, modifier):
         for monster in self:
             monster.powermod = modifier
+
+    def remove_empty(self):
+        """
+        Remove monsters that have an empty stack size.
+        """
+        self[:] = filter(lambda x: x.stack > 0, self)
 
     def attack(self, army, report=True):
         if report:
@@ -24,8 +30,11 @@ class Army(list):
         else:
             rep = None
 
-        ours = self.pop_stack()
-        theirs = army.pop_stack()
+        selfiter = iter(self)
+        armyiter = iter(army)
+
+        ours = advance_iter(selfiter)
+        theirs = advance_iter(armyiter)
 
         while ours is not None and theirs is not None:
             if report:
@@ -37,13 +46,11 @@ class Army(list):
                 rep.end_round(left1, left2)
 
             if left1 == 0:
-                ours = self.pop_stack()
+                ours = advance_iter(selfiter)
             if left2 == 0:
-                theirs = army.pop_stack()
+                theirs = advance_iter(armyiter)
 
-        if ours is not None:
-            self.insert(0, ours)
-        if theirs is not None:
-            army.insert(0, theirs)
+        self.remove_empty()
+        army.remove_empty()
 
         return (len(self) > len(army), rep)
