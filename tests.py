@@ -59,7 +59,7 @@ class SimfileTest(unittest.TestCase):
     def test_fight_win_simfile(self):
         army1, army2 = simfile.get_army('test1.sim')
         army1[0].stack += 10 # vampires
-        result, report = army1.attack(army2)
+        result, report = army1.attack(army2, dry_run=False)
         self.assertTrue(result)
         self.assertEqual(len(army1), 2)
         self.assertEqual(len(army2), 0)
@@ -72,7 +72,14 @@ class SimfileTest(unittest.TestCase):
     def test_hard_battle(self):
         army1, army2 = simfile.get_army('test1.sim')
         result, report = army1.attack(army2)
-        self.assertFalse(result);
+        self.assertFalse(result)
+
+    def test_dry_run(self):
+        army1, army2 = simfile.get_army('test1.sim')
+        result1, report1 = army1.attack(army2, dry_run=True)
+        result2, report2 = army1.attack(army2, dry_run=True)
+        self.assertEqual(result1, result2)
+        self.assertEqual(report1.leftovers(), report2.leftovers())
 
 class OptimizerTest(unittest.TestCase):
     def test_optimize(self):

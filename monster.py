@@ -32,12 +32,26 @@ class Monster(object):
             return self.power * WEAPON_BONUS
         return self.power
 
-    def new_stack_from_diff(self, diff):
+    def get_stack_from_diff(self, diff):
         new_stack = int(math.ceil(diff / float(self.power)))
         if new_stack < self.stack:
-            self.stack = new_stack
+            return new_stack
+        else:
+            return self.stack
 
-    def fight_with(self, monster):
+    def save_stack(self):
+        """
+        Temporarily save the current stack value.
+        """
+        self._temp_stack = self.stack
+
+    def restore_stack(self):
+        """
+        Restore temporarily saved stack value.
+        """
+        self.stack = self._temp_stack
+
+    def fight_with(self, monster, dry_run=False):
         our_power = self.get_bonus_power(monster)
         their_power = monster.get_bonus_power(self)
 
@@ -48,11 +62,15 @@ class Monster(object):
 
         if diff > 0:
             # we have won
-            self.new_stack_from_diff(diff)
-            monster.stack = 0
+            our_stack = self.get_stack_from_diff(diff)
+            their_stack = 0
         else:
             # we have lost
-            monster.new_stack_from_diff(-diff)
-            self.stack = 0
+            their_stack = monster.get_stack_from_diff(-diff)
+            our_stack = 0
 
-        return (self.stack, monster.stack)
+        if not dry_run:
+            self.stack = our_stack
+            monster.stack = their_stack
+
+        return (our_stack, their_stack)
