@@ -6,7 +6,7 @@ class ParseError(Exception):
     pass
 
 class Simfile(object):
-    stack_re = re.compile(r'\s*([a-zA-Z]+)\s*\((\d+)\)\s*')
+    stack_re = re.compile(r'\s*(#?)([a-zA-Z]+)\s*\((\d+)\)\s*')
 
     def __init__(self, path):
         self.simfile = open(path, 'r')
@@ -15,8 +15,10 @@ class Simfile(object):
         match = self.stack_re.match(string)
         if match is None:
             raise ParseError("Could not parse %r." % string)
-        cls = getattr(monsters, match.group(1))
-        count = match.group(2)
+        if len(match.group(1)) > 0:
+            return None # ignore monster
+        cls = getattr(monsters, match.group(2))
+        count = match.group(3)
         return cls(int(count))
 
     def parse(self):
@@ -29,6 +31,10 @@ class Simfile(object):
                 our_army.append(self.monstify(splitted[0]))
             if len(splitted) > 1:
                 their_army.append(self.monstify(splitted[1]))
+
+        remover = lambda x: x is not None
+        our_army = filter(remover, our_army)
+        their_army = filter(remover, their_army)
 
         return (army.Army(our_army), army.Army(their_army))
 
